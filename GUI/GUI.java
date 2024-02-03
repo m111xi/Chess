@@ -5,8 +5,10 @@ public class GUI {
     JFrame actualJFrame;
     Draw drawingObject;
     public GUI() {
+        SwingUtilities.invokeLater(() -> {
+
         actualJFrame = new JFrame("Chess");
-        actualJFrame.setSize(815, 835);
+        actualJFrame.setSize(815, 840);
         actualJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         actualJFrame.setLocationRelativeTo(null);
         actualJFrame.setLayout(null);
@@ -16,8 +18,9 @@ public class GUI {
         actualJFrame.setVisible(true);
         drawingObject = new Draw();
         drawingObject.setVisible(true);
-        drawingObject.setBounds(0,0,800,800);
+        drawingObject.setBounds(0,0,815,840);
         actualJFrame.add(drawingObject);
+        });
     }
 
 
