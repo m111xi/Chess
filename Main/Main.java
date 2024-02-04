@@ -1,7 +1,9 @@
+package Main;
 import GUI.*;
 
 public class Main {
+    public static GUI gui;
     public static void main(String[] args) {
-        GUI g = new GUI();
+        gui = new GUI();
     }
 }

@@ -3,7 +3,8 @@ import javax.swing.*;
 
 public class GUI {
     JFrame actualJFrame;
-    Draw drawingObject;
+    public Game game;
+    public Mouse mouse = new Mouse();
     public GUI() {
         SwingUtilities.invokeLater(() -> {
 
@@ -16,10 +17,12 @@ public class GUI {
 
         actualJFrame.requestFocus();
         actualJFrame.setVisible(true);
-        drawingObject = new Draw();
-        drawingObject.setVisible(true);
-        drawingObject.setBounds(0,0,815,840);
-        actualJFrame.add(drawingObject);
+        actualJFrame.addMouseListener(mouse);
+        game = new Game();
+        game.launchGame();
+        game.setVisible(true);
+        game.setBounds(0,0,815,840);
+        actualJFrame.add(game);
         });
     }
 
