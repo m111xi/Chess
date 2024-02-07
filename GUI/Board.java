@@ -1,7 +1,9 @@
 package GUI;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Board {
+    static ArrayList <Coordinates> allowed = new ArrayList<Coordinates>();
     private static void switchColor(Graphics2D g2d) {
         if(g2d.getColor() == Color.DARK_GRAY) {
             g2d.setColor(Color.WHITE);
@@ -18,6 +20,10 @@ public class Board {
                 switchColor(g2d);
             }
             switchColor(g2d);
+        }
+        g2d.setColor(Color.CYAN);
+        for(Coordinates c : Board.allowed) {
+            g2d.fillRect(c.getX()*100, c.getY()*100,100,100);
         }
     }
 }

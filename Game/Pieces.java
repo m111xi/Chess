@@ -25,6 +25,9 @@ public class Pieces {
     public void setRow(int row) {
         this.row = row;
     }
+    public char getColor() {
+        return this.color;
+    }
 
     public void draw(Graphics2D g2d) {
         g2d.drawImage(image, col * 100, row * 100, 100, 100, null);

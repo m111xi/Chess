@@ -4,6 +4,8 @@ public class Rook extends Pieces {
     public Rook(int col, int row, char color) {
         this.col = col;
         this.row = row;
+        this.color = color;
+
         if(color == 'b') {
             this.image = Main.gui.game.getImageLoader().blackRook;
         }

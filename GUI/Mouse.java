@@ -9,6 +9,6 @@ public class Mouse extends MouseAdapter{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Main.gui.game.clickedMouse(e.getX(), e.getY());
+        Main.gui.game.movePiece(e.getX(), e.getY() - 20);
     }
 }

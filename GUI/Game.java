@@ -13,7 +13,7 @@ public class Game extends JLabel implements Runnable{
     Mouse mouse = Main.gui.mouse;
     boolean boolselectedPiece = false;
     Pieces selectedPiece;
-
+    Graphics2D g2d;
     void switchColor(Graphics g) {
         if(g.getColor() == Color.DARK_GRAY) {
             g.setColor(Color.WHITE);
@@ -25,7 +25,7 @@ public class Game extends JLabel implements Runnable{
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D)g;
+        g2d = (Graphics2D)g;
 
         //Draw Background
         Board.draw(g2d);
@@ -109,22 +109,68 @@ public class Game extends JLabel implements Runnable{
             }
         }
     }
-    public void clickedMouse(int x, int y) {
+    public void movePiece(int x, int y) {
         int col = x / 100;
         int row = y / 100;
         if(boolselectedPiece) {
-            selectedPiece.setCol(col);
-            selectedPiece.setRow(row);
-            boolselectedPiece = false; 
+            if(checkIfAllowedMove(col,row)) {
+                if(getPiece(col,row) != null) {
+                    pieces.remove(getPiece(col,row));
+                }
+                selectedPiece.setCol(col);
+                selectedPiece.setRow(row);
+                boolselectedPiece = false; 
+                Board.allowed.clear();
+                
+            }
+            else {
+                boolselectedPiece = false; 
+                Board.allowed.clear();
+            }
         }
         else {
             for(Pieces p : pieces) {
                 if(p.getRow() == row && p.getCol() == col) {
                     selectedPiece = p;
+                    showAllowedPlaced(p);
                     boolselectedPiece = true;
                 }
             }
         }
+    }
+    private void showAllowedPlaced(Pieces p) {
+        if(p.getClass().getName().equals("Game.Pawn")) {
+            if(p.getColor() == 'b') {
+                if(p.getRow() == 6) {
+                    Board.allowed.add(new Coordinates(p.getCol(), p.getRow() -1));
+                    Board.allowed.add(new Coordinates(p.getCol(), p.getRow() -2));
+                }
+                else {
+                    Board.allowed.add(new Coordinates(p.getCol(), p.getRow() -1));
+                }
+            }
+            else {
+                if(p.getRow() == 1) {
+                    Board.allowed.add(new Coordinates(p.getCol(), p.getRow() +1));
+                    Board.allowed.add(new Coordinates(p.getCol(), p.getRow() +2));
+                }
+                else {
+                    Board.allowed.add(new Coordinates(p.getCol(), p.getRow() +1));
+                }
+            }
+        }
+    }
+    private boolean checkIfAllowedMove(int x, int y) {
+        for(Coordinates c : Board.allowed) {
+            if(c.x == x && c.y == y) return true;
+        }
+        return false;
+    }  
+    private Pieces getPiece(int col, int row) {
+        for(Pieces p : pieces) {
+            if(p.getCol() == col && p.getRow() == row) return p;
+        }
+        return null;
     }
 
 }
