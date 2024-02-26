@@ -1,10 +1,7 @@
 package Game;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 
 public class Pieces {
@@ -32,4 +29,5 @@ public class Pieces {
     public void draw(Graphics2D g2d) {
         g2d.drawImage(image, col * 100, row * 100, 100, 100, null);
     }
+    public void movement() {}
 }
