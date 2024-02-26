@@ -1,4 +1,4 @@
-package Game;
+package Pieces;
 import Main.*;
 import GUI.*;
 public class Rook extends Pieces {

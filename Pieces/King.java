@@ -1,4 +1,4 @@
-package Game;
+package Pieces;
 import GUI.Board;
 import GUI.Coordinates;
 import Main.*;

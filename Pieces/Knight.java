@@ -1,4 +1,4 @@
-package Game;
+package Pieces;
 import GUI.*;
 import Main.*;
 public class Knight extends Pieces {

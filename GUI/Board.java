@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Board {
     public static ArrayList <Coordinates> allowed = new ArrayList<Coordinates>();
+    private static boolean draw = true;
     private static void switchColor(Graphics2D g2d) {
         if(g2d.getColor() == Color.DARK_GRAY) {
             g2d.setColor(Color.WHITE);
@@ -21,9 +22,14 @@ public class Board {
             }
             switchColor(g2d);
         }
-        g2d.setColor(Color.GREEN);
-        for(Coordinates c : Board.allowed) {
-            g2d.fillRect(c.getX()*100, c.getY()*100,100,100);
+        if(draw) {
+            g2d.setColor(Color.GREEN);
+            for(Coordinates c : Board.allowed) {
+                g2d.fillRect(c.getX()*100, c.getY()*100,100,100);
+            }
         }
+    }
+    public static void switchDraw() {
+        draw = !draw;
     }
 }
