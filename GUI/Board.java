@@ -29,7 +29,8 @@ public class Board {
             }
         }
     }
-    public static void switchDraw() {
-        draw = !draw;
+    public static void setDraw(boolean b) {
+        draw = b;
     }
+    
 }

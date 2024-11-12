@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import Pieces.*;
 import Main.*;
-
+//Diese Klasse ist die Main Game Logic Klasse
 public class Game extends JLabel implements Runnable{
     ImageLoader imageLoader = new ImageLoader();
     Thread gameThread;
@@ -17,11 +17,12 @@ public class Game extends JLabel implements Runnable{
     King whiteKing;
     King blackKing;
 
+    //Ändert den Spieler, der dran ist
     private void switchPlayer() {
         if(player == 'w') player = 'b';
         else player = 'w';
     }
-
+    //Zeichnet das Brett, sowie die Figuren auf dem Brett
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g2d = (Graphics2D)g;
@@ -35,13 +36,16 @@ public class Game extends JLabel implements Runnable{
         repaint();
     }
 
+    //Gibt den ImageLoader zurück
     public ImageLoader getImageLoader() {
         return imageLoader;
     }
 
+    //Startet ein neues Spiel, initialisiert die Figuren
     public void launchGame() {
         gameThread = new Thread(this);
         gameThread.start();
+        //Könige sind noch besondere Figuren 
         blackKing = new King(4,7,'b');
         whiteKing = new King(3,0,'w');
 
@@ -82,9 +86,9 @@ public class Game extends JLabel implements Runnable{
         pieces.add(new Rook(7,0,'w'));
     }
 
+    //Game Loop
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         double drawInterval = 1000000000/60;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -102,6 +106,8 @@ public class Game extends JLabel implements Runnable{
             }
         }
     }
+
+    //Bewegt eine Figur
     public void movePiece(int x, int y) {
         int col = x / 100;
         int row = y / 100;
@@ -113,7 +119,11 @@ public class Game extends JLabel implements Runnable{
                 selectedPiece.setCol(col);
                 selectedPiece.setRow(row);
 
-                if(checkIfInCheck()) System.out.print("asdasasd-");
+                if(checkIfInCheck()) {
+                    System.out.print("asdasasd");
+                    
+                    if(checkIfInCheckMate()) System.out.print("asdasasdssssss");
+                }
                 
                 selectedPiece = null;
                 Board.allowed.clear();
@@ -136,6 +146,7 @@ public class Game extends JLabel implements Runnable{
         }
     }
 
+    //Überprüft, ob der Zug valide ist, in dem überprüft wird, ob auf ein markiertes Feld geklickt wurde
     private boolean checkIfAllowedMove(int x, int y) {
         for(Coordinates c : Board.allowed) {
             if(c.x == x && c.y == y) return true;
@@ -143,20 +154,23 @@ public class Game extends JLabel implements Runnable{
         return false;
     }
 
+    //Gibt die Figur zurück, auf die geklickt wurde
     public Pieces getPiece(int col, int row) {
         for(Pieces p : pieces) {
             if(p.getCol() == col && p.getRow() == row) return p;
         }
         return null;
     }
-    private boolean checkIfInCheck() {
-        Board.switchDraw();
-        int col; int row;
-        for(Pieces p : pieces) {
-            Board.allowed.clear();
-            p.movement();
 
-            if(p.getColor() == 'w') {
+    //Überprüft, ob sich zur Zeit ein Schach existiert
+    private boolean checkIfInCheck() {
+        Board.setDraw(false);
+        int col; int row;
+        for(int i = 0; i < pieces.size(); i++) { 
+            Board.allowed.clear();
+            pieces.get(i).movement();
+
+            if(pieces.get(i).getColor() == 'w') {
                 col = blackKing.getCol();
                 row = blackKing.getRow();
             }
@@ -168,12 +182,56 @@ public class Game extends JLabel implements Runnable{
             for(Coordinates c : Board.allowed) {
                 if(c.x == col && c.y == row) {
                     Board.allowed.clear();
-                    Board.switchDraw();
+                    Board.setDraw(true);
                     return true;
                 }
             }
         }
-        Board.switchDraw();
+        Board.setDraw(true);
         return false;
     }  
+
+    //Überprüft ob ein SchachMatt exisitiert
+    public boolean checkIfInCheckMate() {
+        boolean checkMate = true;
+    
+        // 1. Überprüfen, ob der König im Schach steht
+        if (!checkIfInCheck()) {
+            return false; // Nicht im Schach, also kein Schachmatt
+        }
+    
+        // 2. Simuliere jeden möglichen Zug und prüfe, ob es einen Ausweg gibt
+        for (int i = 0; i < pieces.size(); i++) {
+            if (pieces.get(i).getColor() == player) {
+                pieces.get(i).movement();
+                int oldRow = pieces.get(i).getRow();
+                int oldCol = pieces.get(i).getCol();
+    
+                // Erstelle eine Kopie von Board.allowed für die Iteration
+
+    
+                // Versuche jede mögliche Bewegung der Figur
+                switchPlayer();
+                ArrayList<Coordinates> possibleMoves = new ArrayList<>(Board.allowed);
+                for (Coordinates move : possibleMoves) {
+                    pieces.get(i).setRow(move.getY());
+                    pieces.get(i).setCol(move.getX());
+    
+                    // Überprüfe, ob der König immer noch im Schach ist
+                    if (!checkIfInCheck()) {
+                        checkMate = false;  // Es gibt einen Ausweg, also kein Schachmatt
+                    }
+    
+                    // Setze die Figur auf ihre ursprüngliche Position zurück
+                    pieces.get(i).setRow(oldRow);
+                    pieces.get(i).setCol(oldCol);
+                }
+                switchPlayer();
+            }
+        }
+    
+        return checkMate;
+    }
+    
+    
 }
